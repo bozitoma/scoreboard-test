@@ -1,7 +1,7 @@
 import { ChangeEvent, ChangeEventHandler, MouseEventHandler } from "react";
 import { TournamentFieldUnit } from "./TournamentFieldUnit";
 import { useRecoilState } from "recoil";
-import { tournamentResultAtom } from "../../store/atom";
+import { tournamentResultAtom } from "../../store/atomTournament";
 import { tournamentResultProps } from "../../types/tournamentResultDefaultValue";
 import { useGetTournament } from "../../hooks/StartggAPI/useGetTournament";
 
@@ -13,11 +13,11 @@ export function TournamentField({ roundName }: Props) {
   const [tournamentScore, setTournamentScore] =
     useRecoilState(tournamentResultAtom);
   const defaultValue = tournamentResultProps;
-  const { handleGetStreamQueue } = useGetTournament();
+  const { handleGetSets } = useGetTournament();
 
   // test中
   const tournamentInfoAssign: MouseEventHandler<HTMLButtonElement> = () => {
-    handleGetStreamQueue();
+    handleGetSets();
   };
 
   const tournamentInfoReset: MouseEventHandler<HTMLButtonElement> = (event) => {
@@ -63,7 +63,7 @@ export function TournamentField({ roundName }: Props) {
   return (
     <>
       <TournamentFieldUnit
-        // Player1
+        // Player
         value={tournamentScore}
         // Function
         onChangeName={tournamentNameEdit}

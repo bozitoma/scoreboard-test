@@ -1,6 +1,6 @@
 import { ChangeEvent, ChangeEventHandler } from "react";
 import { useRecoilState } from "recoil";
-import { tournamentRoundAtom } from "../../store/atom";
+import { tournamentRoundAtom } from "../../store/atomTournament";
 
 export const useTournament = () => {
   const [tournamentRound, setTournamentRound] =

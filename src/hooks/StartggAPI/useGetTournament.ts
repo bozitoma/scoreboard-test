@@ -1,9 +1,10 @@
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { tournamentResultAtom, tournamentSetsAtom } from "../../store/atom";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { tournamentResultAtom } from "../../store/atomTournament";
 import { startggUrlAtom } from "../../store/atomStartggUrl";
 
 export function useGetTournament() {
   const setTournamentScore = useSetRecoilState(tournamentResultAtom);
+  const url = useRecoilValue(startggUrlAtom);
 
   const getEventSlug = (url: string): string => {
     if (!url.startsWith("https://www.start.gg/tournament/")) {
@@ -24,35 +25,40 @@ export function useGetTournament() {
     return `${urlParts[3]}/${urlParts[4]}`;
   };
 
-  //  tournament/in-4-1/event/ssqm
+  const getPhaseID = (url: string): string => {
+    if (!url.startsWith("https://www.start.gg/tournament/")) {
+      return "";
+    }
+    const urlParts = url.split("/");
+    return urlParts[8];
+  };
 
-  const streamQueueQuery = `
-    query EventSets($eventSlug: String!) {
-      event(slug: $eventSlug) {
+  const getPhaseGroupID = (url: string): string => {
+    if (!url.startsWith("https://www.start.gg/tournament/")) {
+      return "";
+    }
+    const urlParts = url.split("/");
+    return urlParts[9];
+  };
+
+  const phaseGroupSetsQuery = `
+    query PhaseGroupSets($phaseGroupId: ID!) {
+      phaseGroup(id: $phaseGroupId) {
         id
-        name
-        sets(
-          page: 1
-          perPage: 500
-          sortType: RECENT
-        ) {
-          pageInfo {
-            total
-          }
+        bracketType
+        sets(page: 1, perPage: 19, sortType: NONE)  {
           nodes {
             id
-            wPlacement
-            lPlacement
             fullRoundText
             slots {
               standing {
-            placement
-            stats {
-              score {
-                value
+                placement
+                stats {
+                  score {
+                    value
+                  }
+                }
               }
-            }
-          }
               entrant {
                 name
               }
@@ -62,29 +68,27 @@ export function useGetTournament() {
       }
     }`;
 
-  // const RoundInfoChange: { [key: string]: string } = {
-  //   "Grand Final Reset": "Grand Final Reset",
-  //   "Grand Final": "Grand Final",
-  //   "Winners Final": "Winners Final",
-  //   "Winners Semi-Final": "Winners Semi",
-  //   "Winners Quarter-Final": "Winners Quarter",
-  //   "Losers Final": "Losers Final",
-  //   "Losers Semi-Final": "Losers Semi",
-  //   "Losers Quarter-Final": "Losers Quarter",
-  // };
-
-  const getStreamQueue = async (url: string) => {
+  const getPhaseGroupSets = async (url: string) => {
     if (!url) {
       return [];
     }
     const tournarySlug = getTournarySlug(url);
     const eventSlug = getEventSlug(url);
-    if (tournarySlug === "" || eventSlug === "") {
+    const phaseId = getPhaseID(url);
+    const phaseGroupId = getPhaseGroupID(url);
+    if (
+      tournarySlug === "" ||
+      eventSlug === "" ||
+      phaseId === "" ||
+      phaseGroupId === ""
+    ) {
       return [];
     }
     const variables = {
       tourneySlug: tournarySlug,
       eventSlug: eventSlug,
+      phaseId: phaseId,
+      phaseGroupId: phaseGroupId,
     };
     const res = await fetch(`https://api.smash.gg/gql/alpha`, {
       method: "POST",
@@ -95,143 +99,109 @@ export function useGetTournament() {
         encoding: "utf-8",
       },
       body: JSON.stringify({
-        query: streamQueueQuery,
+        query: phaseGroupSetsQuery,
         variables,
       }),
     }).then((res) => res.json());
     return res;
   };
 
-  console.log(
-    getStreamQueue(
-      "https://www.start.gg/tournament/smash-argentina-z-la-saga-de-hildegarn/event/saga-de-hildegarn-true/brackets/1538094/2312118"
-    )
-  );
-
-  // res.data.event.sets.nodes[0].slots[0].entrant.name
-  // slots[0]=トーナメント上 slots[1]=トーナメント下
-  // nodes[x]=試合の場所
-
-  // res.data.event.sets.nodes[0].slots[1].standing.stats.score.value
-  // スコア
-
-  // res.data.event.sets.nodes[0].fullRoundText
-  // ラウンド名
-
-  // console.log(
-  //   getStreamQueue(
-  //     "https://www.start.gg/tournament/in-4-1/event/ssqm/brackets/1525733/2296213"
-  //   )
-  // );
-
-  //  https://www.start.gg/tournament/api-test-1/event/special-1on1-ultimate-singles/brackets/1456184/2204751
-
-  // const getPokemonIcon = (name: string) => {
-  //   const pokeName = pokedex.findIndex((data) => data["name"] === name);
-  //   if (typeof pokeName !== "undefined") {
-  //     return pokedex[pokeName];
-  //   }
-  // };
-
-  const url = useRecoilValue(startggUrlAtom);
-  const setSets = useSetRecoilState(tournamentSetsAtom);
+  const grandFinalBracket = ["GF", "GF2"];
+  const winnersBracket = ["WF", "WSFb", "WSFa", "WQFd", "WQFc", "WQFb", "WQFa"];
+  const losersBracket = [
+    "LF",
+    "LSF",
+    "LQFb",
+    "LQFa",
+    "LTOP8b",
+    "LTOP8a",
+    "LTOP16d",
+    "LTOP16c",
+    "LTOP16b",
+    "LTOP16a",
+  ];
 
   const handleGetSets = async () => {
     try {
-      const result = await getStreamQueue(url);
-      const array = result.data.event.sets.nodes;
+      const result: phaseGroupAPIResponse = await getPhaseGroupSets(url);
+      const bracketType = result.data.phaseGroup.bracketType;
+      const nodes = result.data.phaseGroup.sets.nodes;
 
-      setSets(array);
+      // APIの結果を格納する配列
+      const GF: Array<phaseGroupNodesAPIResponse> = [];
+      const WF: Array<phaseGroupNodesAPIResponse> = [];
+      const LF: Array<phaseGroupNodesAPIResponse> = [];
+
+      nodes.map((node) => {
+        const round = node.fullRoundText;
+        if (bracketType === "DOUBLE_ELIMINATION") {
+          if (round.includes("Grand")) {
+            GF.push(node);
+          } else if (round.includes("Winners")) {
+            WF.push(node);
+          } else if (round.includes("Losers")) {
+            LF.push(node);
+          }
+        } else if (bracketType === "SINGLE_ELIMINATION") {
+          if (round.includes("3rd Place Tiebreak")) {
+            GF.push(node);
+          } else if (round.includes("Final")) {
+            WF.push(node);
+          }
+        }
+      });
+
+      const applyBracket = (
+        round: string[],
+        array: Array<phaseGroupNodesAPIResponse>
+      ) => {
+        if (array === GF) {
+          array.sort((a, b) => a.id - b.id); //GFはResetがあるかないか不明瞭なので、GF2よりGFを配列[0]にする
+        } else {
+          array.sort((a, b) => b.id - a.id);
+        }
+
+        round.map((x, i) => {
+          if (array[i] === undefined) {
+            return;
+          }
+          setTournamentScore((prev) => ({
+            ...prev,
+            [x]: {
+              name1p:
+                array[i].slots[0].entrant === null
+                  ? ""
+                  : array[i].slots[0].entrant.name,
+              name2p:
+                array[i].slots[1].entrant === null
+                  ? ""
+                  : array[i].slots[1].entrant.name,
+              score1p:
+                array[i].slots[0].standing === null
+                  ? 0
+                  : array[i].slots[0].standing.stats.score.value,
+              score2p:
+                array[i].slots[1].standing === null
+                  ? 0
+                  : array[i].slots[1].standing.stats.score.value,
+            },
+          }));
+        });
+      };
+
+      applyBracket(grandFinalBracket, GF);
+      applyBracket(winnersBracket, WF);
+      applyBracket(losersBracket, LF);
     } catch (error) {
-      console.error("getStreamQueue failed:", error);
+      console.error("StartGGのAPI取得に失敗しました:", error);
     }
   };
 
-  const handleGetStreamQueue = async () => {
-    try {
-      const result = await getStreamQueue(url);
-      //  "https://www.start.gg/tournament/in-4-1/event/ssqm/brackets/1525733/2296213"
-      // "https://www.start.gg/tournament/aim-for-the-ace-championship2023/event/64/brackets/1480645/2237087"
+  // ブラケットのサンプル
+  // "https://www.start.gg/tournament/in-4-1/event/ssqm/brackets/1525733/2296213"
+  // "https://www.start.gg/tournament/aim-for-the-ace-championship2023/event/64/brackets/1480645/2237087"
+  // "https://www.start.gg/tournament/api-test-1/event/special-1on1-ultimate-singles/brackets/1456184/2204751";
+  // "https://www.start.gg/tournament/aim-for-the-ace-2nd-anniversary-cup/event/mario-tennis-aces-singles-4/brackets/806437/1295426"
 
-      const array = result.data.event.sets.nodes;
-
-      // ↓ひとつの関数でまとめられそう
-      const indexGrandFinal = array.findIndex(
-        (data: string[][]) => data.fullRoundText === "Grand Final" || "Final"
-      );
-
-      const indexWinnersFinal = array.findIndex(
-        (data: string[][]) => data.fullRoundText === "Winners Final"
-      );
-
-      const indexLosersFinal = array.findIndex(
-        (data: string[][]) => data.fullRoundText === "Losers Final"
-      );
-
-      const grandFinal =
-        result.data.event.sets.nodes[indexGrandFinal].fullRoundText;
-
-      const p1name =
-        result.data.event.sets.nodes[indexGrandFinal].slots[0].entrant.name;
-
-      const p1score =
-        result.data.event.sets.nodes[indexGrandFinal].slots[0].standing.stats
-          .score.value;
-
-      const p2name =
-        result.data.event.sets.nodes[indexGrandFinal].slots[1].entrant.name;
-
-      const p2score =
-        result.data.event.sets.nodes[indexGrandFinal].slots[1].standing.stats
-          .score.value;
-
-      const winnersFinal =
-        result.data.event.sets.nodes[indexWinnersFinal].fullRoundText;
-
-      const losersFinal =
-        result.data.event.sets.nodes[indexLosersFinal].fullRoundText;
-
-      console.log(grandFinal);
-      console.log(winnersFinal);
-      console.log(losersFinal);
-      console.log(p1name);
-      console.log(p2name);
-      console.log(p1score);
-      console.log(p2score);
-
-      setTournamentScore((prev) => ({
-        ...prev,
-        WQFa: {
-          name1p: p1name,
-          name2p: p2name,
-          score1p: p1score,
-          score2p: p2score,
-        },
-        WQFb: {
-          name1p: p1name,
-          name2p: p2name,
-          score1p: p1score,
-          score2p: p2score,
-        },
-        WQFc: {
-          name1p: "test",
-          name2p: p2name,
-          score1p: p1score,
-          score2p: p2score,
-        },
-        WQFd: {
-          name1p: "kkkkk",
-          name2p: p2name,
-          score1p: p1score,
-          score2p: p2score,
-        },
-      }));
-    } catch (error) {
-      console.error("getStreamQueue failed:", error);
-    }
-  };
-
-  // レンダーを防いでおきたい
-
-  return { handleGetStreamQueue, handleGetSets };
+  return { handleGetSets };
 }
