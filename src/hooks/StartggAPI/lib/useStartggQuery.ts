@@ -121,14 +121,14 @@ export const useStartggQuery = () => {
     }`;
 
   const RoundInfoChange: { [key: string]: string } = {
-    'Grand Final Reset': 'Grand Finals',
-    'Grand Final': 'Grand Finals',
-    'Winners Final': 'Winners Finals',
-    'Winners Semi-Final': 'Winners Semis',
-    'Winners Quarter-Final': 'Winners Quarters',
-    'Losers Final': 'Losers Finals',
-    'Losers Semi-Final': 'Losers Semis',
-    'Losers Quarter-Final': 'Losers Quarters',
+    "Grand Final Reset": "Grand Finals",
+    "Grand Final": "Grand Finals",
+    "Winners Final": "Winners Finals",
+    "Winners Semi-Final": "Winners Semis",
+    "Winners Quarter-Final": "Winners Quarters",
+    "Losers Final": "Losers Finals",
+    "Losers Semi-Final": "Losers Semis",
+    "Losers Quarter-Final": "Losers Quarters",
   };
 
   const streamQueueQuery = `
@@ -227,5 +227,11 @@ query StreamQueueOnTournament($eventSlug: String!, $page: Int!) {
     }
   }
   }`;
-  return { TournamentQuery, BracektQuery, RoundInfoChange, streamQueueQuery, nextQuery };
+  return {
+    TournamentQuery,
+    BracektQuery,
+    RoundInfoChange,
+    streamQueueQuery,
+    nextQuery,
+  };
 };

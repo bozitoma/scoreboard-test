@@ -23,7 +23,7 @@ interface phaseGroupNodesAPIResponse {
       placement: number;
       stats: {
         score: {
-          value: number | null;
+          value: number;
         };
       };
     };

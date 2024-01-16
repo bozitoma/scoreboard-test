@@ -20,7 +20,7 @@ type PlayerScore = {
 };
 
 export const useStreamQuery = () => {
-  const { RoundInfoChange, streamQueueQuery, nextQuery } = useStartggQuery();
+  const { streamQueueQuery } = useStartggQuery();
   const getEventSlug = (url: string): string => {
     if (!url.startsWith("https://www.start.gg/tournament/")) {
       return "";
@@ -43,31 +43,6 @@ export const useStreamQuery = () => {
   };
 
   //  tournament/in-4-1/
-
-  const getRoundText = (set: any): string => {
-    // FinalシリーズだったらRoundInfoChangeの内容を返す
-    const lookupResult = RoundInfoChange[set?.fullRoundText || ""];
-
-    if (lookupResult) {
-      return lookupResult;
-    }
-
-    // 予選だったらこちらを返す
-    const fullRoundText = set?.fullRoundText;
-    if (!fullRoundText) {
-      return "";
-    }
-
-    if (set?.lPlacement) {
-      if (fullRoundText.startsWith("Winners")) {
-        return `Winners Top${(set.lPlacement - 1) * 2}`;
-      } else if (fullRoundText.startsWith("Losers")) {
-        return `Losers Top${(set.wPlacement - 1) * 2}`;
-      }
-    }
-
-    return fullRoundText;
-  };
 
   const getStreamQueue = async (url?: string): Promise<StreamQueue> => {
     if (!url) {

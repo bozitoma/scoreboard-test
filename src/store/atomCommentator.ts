@@ -11,7 +11,7 @@ export const commentatorAtom = atom({
   },
 });
 
-export const commentatorSelectedRowId = atom<number | null>({
+export const commentatorSelectedRowId = atom<number | undefined>({
   key: "commentatorSelectedRowId",
-  default: null,
+  default: undefined,
 });
