@@ -1,5 +1,4 @@
-interface phaseGroupAPIResponse {
-  // あなたのAPIレスポンスの型定義
+type phaseGroupAPIResponse = {
   data: {
     phaseGroup: {
       bracketType: string;
@@ -9,10 +8,9 @@ interface phaseGroupAPIResponse {
       };
     };
   };
-}
+};
 
-interface phaseGroupNodesAPIResponse {
-  // あなたのAPIレスポンスの型定義
+type phaseGroupNodesAPIResponse = {
   fullRoundText: string;
   id: number;
   slots: Array<{
@@ -28,4 +26,53 @@ interface phaseGroupNodesAPIResponse {
       };
     };
   }>;
-}
+};
+
+type matchAPIResponse = {
+  data: {
+    phaseGroup: {
+      sets: {
+        nodes: Array<matchNodesAPIResponse>;
+      };
+    };
+  };
+};
+
+type matchNodesAPIResponse = {
+  id: number;
+  fullRoundText: string;
+  state: number;
+  stream: {
+    streamName: string;
+  };
+  slots: Array<{
+    entrant: {
+      name: string;
+      participants: Array<{
+        gamerTag: string;
+        prefix: string;
+        user: {
+          authorizations: Array<{
+            externalUsername: string;
+          }>;
+        };
+      }>;
+    };
+  }>;
+};
+
+// Matchを格納するための配列
+type matchArray = {
+  Player1: matchPlayerInfo;
+  Player2: matchPlayerInfo;
+  Round: string;
+  State: "In Progress" | "Waiting";
+  Stream: string;
+  Id: number;
+};
+
+type matchPlayerInfo = {
+  name: string;
+  team: string;
+  xID: string;
+};

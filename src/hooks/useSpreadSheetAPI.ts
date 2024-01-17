@@ -32,5 +32,8 @@ export function useSpreadSheetAPI() {
       .then((datas) => setSpreadSheet(CsvDic(datas.values)));
   }, []);
 
+  // https://sheets.googleapis.com/v4/spreadsheets/{スプレッドシートID}/values/{シート名}?key={APIキー}
+  // https://docs.google.com/spreadsheets/d/1TqdCdct1gkf7vbM7bNi1iXyZnQnkC1i9h60kmfbMXNw/edit?usp=sharing
+
   return { spreadSheetAPI };
 }

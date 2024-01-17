@@ -56,3 +56,23 @@ export const bracketResultAtom = atom({
     GF2: defaultValue,
   },
 });
+
+export const bracketStartggUrlAtom = atom({
+  key: "bracketStartggUrlAtom",
+  default: "",
+});
+
+export const bracketLoadingAtom = atom({
+  key: "bracketLoadingAtom",
+  default: false,
+});
+
+export const bracketCompletedAlertAtom = atom({
+  key: "bracketCompletedAlertAtom",
+  default: false,
+});
+
+export const bracketErrorAlertAtom = atom({
+  key: "bracketErrorAlertAtom",
+  default: false,
+});

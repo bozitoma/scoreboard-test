@@ -1,10 +1,19 @@
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { bracketResultAtom } from "../../store/atomBracket";
-import { bracketStartggUrlAtom } from "../../store/atomStartggUrl";
-import { useGetSlug } from "./lib/useRequestQuery";
+import {
+  bracketCompletedAlertAtom,
+  bracketErrorAlertAtom,
+  bracketLoadingAtom,
+  bracketResultAtom,
+  bracketStartggUrlAtom,
+} from "../../store/atomBracket";
+import { useGetSlug } from "./useRequestQuery";
 
 export function useGetBracket() {
   const setBracketScore = useSetRecoilState(bracketResultAtom);
+  const setIsLoading = useSetRecoilState(bracketLoadingAtom);
+  const setCompletedAlert = useSetRecoilState(bracketCompletedAlertAtom);
+  const setErrorAlert = useSetRecoilState(bracketErrorAlertAtom);
+
   const url = useRecoilValue(bracketStartggUrlAtom);
   const { requestQuery } = useGetSlug();
 
@@ -51,6 +60,9 @@ export function useGetBracket() {
   ];
 
   const handleGetSets = async () => {
+    // ボタンのローディング開始
+    setIsLoading(true);
+
     try {
       const result: phaseGroupAPIResponse = await requestQuery(
         url,
@@ -128,17 +140,21 @@ export function useGetBracket() {
       applyBracket(winnersBracket, WF);
       applyBracket(losersBracket, LF);
 
-      console.log(GF, WF, LF);
+      setCompletedAlert(true);
     } catch (error) {
       console.error("StartGGのAPI取得に失敗しました:", error);
+      setErrorAlert(true);
     }
-  };
 
-  // ブラケットのサンプル
-  // "https://www.start.gg/tournament/in-4-1/event/ssqm/brackets/1525733/2296213"
-  // "https://www.start.gg/tournament/aim-for-the-ace-championship2023/event/64/brackets/1480645/2237087"
-  // "https://www.start.gg/tournament/api-test-1/event/special-1on1-ultimate-singles/brackets/1456184/2204751";
-  // "https://www.start.gg/tournament/aim-for-the-ace-2nd-anniversary-cup/event/mario-tennis-aces-singles-4/brackets/806437/1295426"
+    // ボタンのローディング終了
+    setIsLoading(false);
+  };
 
   return { handleGetSets };
 }
+
+// ブラケットのサンプル
+// "https://www.start.gg/tournament/in-4-1/event/ssqm/brackets/1525733/2296213"
+// "https://www.start.gg/tournament/aim-for-the-ace-championship2023/event/64/brackets/1480645/2237087"
+// "https://www.start.gg/tournament/api-test-1/event/special-1on1-ultimate-singles/brackets/1456184/2204751";
+// "https://www.start.gg/tournament/aim-for-the-ace-2nd-anniversary-cup/event/mario-tennis-aces-singles-4/brackets/806437/1295426"

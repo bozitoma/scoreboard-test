@@ -1,13 +1,14 @@
-import { Alert, Snackbar } from "@mui/material";
+import { Alert, AlertColor, Snackbar } from "@mui/material";
 import { Dispatch, SetStateAction } from "react";
 
 type Props = {
   state: boolean;
   setState: Dispatch<SetStateAction<boolean>>;
   text: string;
+  severity: AlertColor | undefined;
 };
 
-export function ModalAlert({ state, setState, text }: Props) {
+export function ModalAlert({ state, setState, text, severity }: Props) {
   const handleSubmitClose = (
     _event?: Event | React.SyntheticEvent<Element, Event> | undefined,
     reason?: string
@@ -28,7 +29,7 @@ export function ModalAlert({ state, setState, text }: Props) {
       >
         <Alert
           onClose={handleSubmitClose}
-          severity="success"
+          severity={severity}
           sx={{ width: "100%" }}
         >
           {text}

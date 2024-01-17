@@ -69,6 +69,7 @@ export const ScoreboardButtons = () => {
         state={submitOpen}
         setState={setSubmitOpen}
         text="Update has been completed scoreboard!"
+        severity="success"
       />
 
       {/* Reset完了のスナックバー */}
@@ -76,6 +77,7 @@ export const ScoreboardButtons = () => {
         state={resetCompleteOpen}
         setState={setResetCompleteOpen}
         text="Reset has been completed scoreboard!"
+        severity="success"
       />
 
       {/* Resetのモーダル */}

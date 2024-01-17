@@ -32,7 +32,7 @@ export function CommentatorInfoSolo({
         id={`${commentator}-name`}
         label="Name"
         variant="standard"
-        sx={{ width: 200 }}
+        sx={{ width: 260 }}
         size="small"
         value={value[commentator].name}
         onChange={onChangeName}
@@ -41,7 +41,7 @@ export function CommentatorInfoSolo({
         id={`${commentator}-account`}
         label="Account"
         variant="standard"
-        sx={{ width: 200 }}
+        sx={{ width: 150 }}
         size="small"
         value={value[commentator].account}
         onChange={onChangeAccount}
@@ -50,7 +50,7 @@ export function CommentatorInfoSolo({
         id={`${commentator}-tag`}
         label="Tag"
         variant="standard"
-        sx={{ width: 200 }}
+        sx={{ width: 150 }}
         size="small"
         value={value[commentator].tag}
         onChange={onChangeTag}

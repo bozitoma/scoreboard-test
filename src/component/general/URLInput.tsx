@@ -1,16 +1,28 @@
 import { SetterOrUpdater } from "recoil";
-import { Button, Stack, TextField } from "@mui/material";
+import { Stack, TextField } from "@mui/material";
+import LoadingButton from "@mui/lab/LoadingButton";
 import { ChangeEvent, ChangeEventHandler, MouseEventHandler } from "react";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 
 type Props = {
+  id: string;
+  label: string;
   url: string;
   setUrl: SetterOrUpdater<string>;
   onClick: MouseEventHandler<HTMLButtonElement>;
   width: number;
+  isLoading: boolean;
 };
 
-export function StartggUrlInput({ url, setUrl, onClick, width }: Props) {
+export function URLInput({
+  id,
+  label,
+  url,
+  setUrl,
+  onClick,
+  width,
+  isLoading,
+}: Props) {
   const handleChange: ChangeEventHandler<
     HTMLInputElement | HTMLTextAreaElement
   > = (event: ChangeEvent<HTMLInputElement>) => {
@@ -20,22 +32,23 @@ export function StartggUrlInput({ url, setUrl, onClick, width }: Props) {
   return (
     <Stack spacing={1} direction="row">
       <TextField
-        id="StartGG-URL"
-        label="StartGG URL"
+        id={id}
+        label={label}
         variant="outlined"
         sx={{ width: width }}
         size="small"
         value={url}
         onChange={handleChange}
       />
-      <Button
+      <LoadingButton
         variant="contained"
         size="small"
         startIcon={<FileDownloadIcon />}
+        loading={isLoading}
         onClick={onClick}
       >
         INPORT
-      </Button>
+      </LoadingButton>
     </Stack>
   );
 }

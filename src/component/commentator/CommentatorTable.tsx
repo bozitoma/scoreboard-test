@@ -2,6 +2,7 @@ import {
   Box,
   Paper,
   Radio,
+  Stack,
   Table,
   TableBody,
   TableCell,
@@ -21,37 +22,46 @@ export function CommentatorTable() {
   );
 
   return (
-    <Box sx={{ width: 780, height: 330 }} component={Paper}>
-      <TableContainer>
-        <Table size="small" aria-label="a dense table">
-          <TableHead>
-            <TableRow>
-              <TableCell></TableCell> {/* ラジオボタンのための列 */}
-              <TableCell>Name</TableCell>
-              <TableCell>Account</TableCell>
-              <TableCell>Tag</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {spreadSheetAPI.map((row, i) => (
-              <TableRow
-                key={row.id}
-                hover
-                onClick={() => {
-                  setSelectedRowId(i);
-                }}
-              >
-                <TableCell padding="checkbox">
-                  <Radio checked={selectedRowId === i} />
-                </TableCell>
-                <TableCell>{row.name}</TableCell>
-                <TableCell>{row.account}</TableCell>
-                <TableCell>{row.tag}</TableCell>
+    <Box
+      sx={{
+        p: 2,
+        bgcolor: "background.paper",
+        boxShadow: 1,
+        borderRadius: 2,
+      }}
+    >
+      <Stack spacing={2}>
+        <TableContainer sx={{ width: 600, height: 390 }} component={Paper}>
+          <Table size="small">
+            <TableHead>
+              <TableRow>
+                <TableCell>{/* ラジオボタン用のセル */}</TableCell>
+                <TableCell>Name</TableCell>
+                <TableCell>Account</TableCell>
+                <TableCell>Tag</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {spreadSheetAPI.map((row, i) => (
+                <TableRow
+                  key={i}
+                  hover
+                  onClick={() => {
+                    setSelectedRowId(i);
+                  }}
+                >
+                  <TableCell padding="checkbox">
+                    <Radio checked={selectedRowId === i} />
+                  </TableCell>
+                  <TableCell>{row.name}</TableCell>
+                  <TableCell>{row.account}</TableCell>
+                  <TableCell>{row.tag}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Stack>
     </Box>
   );
 }

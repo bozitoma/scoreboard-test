@@ -20,33 +20,31 @@ export function BracketFieldSolo({
   onChangeScore,
 }: Props) {
   return (
-    <>
-      <Stack spacing={0.5} direction="row">
-        <TextField
-          id={idName}
-          label="Player name"
-          variant="outlined"
-          sx={{ width: 140 }}
-          size="small"
-          value={valueName}
-          onChange={onChangeName}
-        />
-        <TextField
-          id={idScore}
-          type="number"
-          variant="outlined"
-          sx={{ width: 60 }}
-          size="small"
-          value={valueScore}
-          onChange={onChangeScore}
-          InputProps={{
-            inputProps: {
-              min: 0,
-              max: 3,
-            },
-          }}
-        />
-      </Stack>
-    </>
+    <Stack spacing={0.5} direction="row">
+      <TextField
+        id={idName}
+        label="Player name"
+        variant="outlined"
+        sx={{ width: 140 }}
+        size="small"
+        value={valueName}
+        onChange={onChangeName}
+      />
+      <TextField
+        id={idScore}
+        type="number"
+        variant="outlined"
+        sx={{ width: 60 }}
+        size="small"
+        value={valueScore}
+        onChange={onChangeScore}
+        InputProps={{
+          inputProps: {
+            min: 0,
+            max: 3,
+          },
+        }}
+      />
+    </Stack>
   );
 }

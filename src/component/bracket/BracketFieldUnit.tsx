@@ -23,35 +23,33 @@ export function BracketFieldUnit({
   assign,
 }: Props) {
   return (
-    <>
-      <Stack spacing={0.5}>
-        <Stack direction="row">
-          <BracketFieldSolo
-            idName={`${name}-name1p`}
-            valueName={value[name].name1p}
-            onChangeName={onChangeName}
-            idScore={`${name}-score1p`}
-            valueScore={value[name].score1p}
-            onChangeScore={onChangeScore}
-          />
-          <IconButton color="primary" onClick={assign} name={name}>
-            <ReplyIcon />
-          </IconButton>
-        </Stack>
-        <Stack direction="row">
-          <BracketFieldSolo
-            idName={`${name}-name2p`}
-            valueName={value[name].name2p}
-            onChangeName={onChangeName}
-            idScore={`${name}-score2p`}
-            valueScore={value[name].score2p}
-            onChangeScore={onChangeScore}
-          />
-          <IconButton onClick={reset} name={name}>
-            <DeleteIcon />
-          </IconButton>
-        </Stack>
+    <Stack spacing={0.5}>
+      <Stack direction="row">
+        <BracketFieldSolo
+          idName={`${name}-name1p`}
+          valueName={value[name].name1p}
+          onChangeName={onChangeName}
+          idScore={`${name}-score1p`}
+          valueScore={value[name].score1p}
+          onChangeScore={onChangeScore}
+        />
+        <IconButton color="primary" onClick={assign} name={name}>
+          <ReplyIcon />
+        </IconButton>
       </Stack>
-    </>
+      <Stack direction="row">
+        <BracketFieldSolo
+          idName={`${name}-name2p`}
+          valueName={value[name].name2p}
+          onChangeName={onChangeName}
+          idScore={`${name}-score2p`}
+          valueScore={value[name].score2p}
+          onChangeScore={onChangeScore}
+        />
+        <IconButton onClick={reset} name={name}>
+          <DeleteIcon />
+        </IconButton>
+      </Stack>
+    </Stack>
   );
 }

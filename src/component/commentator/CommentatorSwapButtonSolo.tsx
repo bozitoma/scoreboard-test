@@ -17,7 +17,7 @@ export function CommentatorSwapButtonSolo({ swap1, swap2, text }: Props) {
         onClick={() => commentatorSwap(swap1, swap2)}
         variant="outlined"
         startIcon={<SwapVerticalCircleIcon />}
-        sx={{ width: 225 }}
+        sx={{ width: 214 }}
       >
         {text}
       </Button>

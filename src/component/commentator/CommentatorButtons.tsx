@@ -36,7 +36,7 @@ export function CommentatorButtons() {
         variant="contained"
         color="primary"
         startIcon={<SendIcon />}
-        sx={{ width: 355 }}
+        sx={{ width: 340 }}
       >
         SUBMIT
       </Button>
@@ -44,7 +44,7 @@ export function CommentatorButtons() {
         variant="outlined"
         color="error"
         startIcon={<DeleteIcon />}
-        sx={{ width: 160 }}
+        sx={{ width: 150 }}
         onClick={reset}
       >
         RESET
@@ -53,7 +53,7 @@ export function CommentatorButtons() {
         variant="outlined"
         color="primary"
         startIcon={<ReplayIcon />}
-        sx={{ width: 160 }}
+        sx={{ width: 150 }}
       >
         RESTORE
       </Button>

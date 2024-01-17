@@ -7,7 +7,7 @@ import { CommentatorTable } from "../../component/commentator/CommentatorTable";
 function App() {
   return (
     <RecoilRoot>
-      <Stack spacing={2} direction="row">
+      <Stack spacing={2} direction="row" justifyContent="center">
         <CommentatorInfo />
         <CommentatorTable />
       </Stack>
