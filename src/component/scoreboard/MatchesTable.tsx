@@ -30,11 +30,13 @@ export const MatchesTable = () => {
       ...prev,
       Round: match.Round,
       Player1: {
+        ...prev.Player1,
         name: match.Player1.name,
         team: match.Player1.team,
         xID: match.Player1.xID,
       },
       Player2: {
+        ...prev.Player2,
         name: match.Player2.name,
         team: match.Player2.team,
         xID: match.Player2.xID,

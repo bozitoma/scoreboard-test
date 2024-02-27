@@ -3,6 +3,8 @@ import "./App.css";
 import { RecoilRoot } from "recoil";
 import { CommentatorInfo } from "../../component/commentator/CommentatorInfo";
 import { CommentatorTable } from "../../component/commentator/CommentatorTable";
+import SetImeageComponent from "../../component/general/test";
+import { Rive } from "../../component/general/test2";
 
 function App() {
   return (
@@ -11,6 +13,8 @@ function App() {
         <CommentatorInfo />
         <CommentatorTable />
       </Stack>
+      <SetImeageComponent />
+      <Rive />
     </RecoilRoot>
   );
 }

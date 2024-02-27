@@ -40,3 +40,34 @@
 .read-the-docs {
   color: #888;
 }
+
+.userSelect {
+  margin: 10rem;
+}
+.selected {
+  padding: 1rem;
+}
+.container {
+  font-size: 18px;
+  align-items: left;
+  :global {
+    /* 選択された要素が入る領域に対して、余白を確保 */
+    .rs__value-container {
+      padding: 0.7rem;
+    }
+    /* 選択された要素をflexの入れ子にして、中央に揃えられるように */
+    .rs__single-value {
+      display: flex;
+      align-items: left;
+    }
+    /* 選択肢の要素をflexの入れ子にして、中央に揃えられるように */
+    .rs__option {
+      display: flex;
+      align-items: left;
+    }
+    .rs__placeholder {
+      display: flex;
+      align-items: left;
+    }
+  }
+}

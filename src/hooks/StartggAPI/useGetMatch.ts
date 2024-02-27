@@ -63,37 +63,97 @@ export function useGetMatch() {
       const array: matchArray[] = [];
 
       nodes.map((node, i) => {
+        console.log(node.slots[1].entrant);
+
         const name1P =
-          node.slots[0].entrant === null
+          node.slots[0].entrant === null ||
+          node.slots[0].entrant.participants[0].gamerTag === null
             ? ""
             : node.slots[0].entrant.participants[0].gamerTag;
 
         const team1P =
-          node.slots[0].entrant === null
+          node.slots[0].entrant === null ||
+          node.slots[0].entrant.participants[0].prefix === null
             ? ""
             : node.slots[0].entrant.participants[0].prefix;
 
         const xID1P =
           node.slots[0].entrant === null ||
-          node.slots[0].entrant.participants[0].user === null
+          node.slots[0].entrant.participants[0].user === null ||
+          node.slots[0].entrant.participants[0].user.authorizations === null
             ? ""
             : `@${node.slots[0].entrant.participants[0].user.authorizations[0].externalUsername}`;
 
         const name2P =
-          node.slots[1].entrant === null
+          node.slots[1].entrant === null ||
+          node.slots[1].entrant.participants[0].gamerTag === null
             ? ""
             : node.slots[1].entrant.participants[0].gamerTag;
 
         const team2P =
-          node.slots[1].entrant === null
+          node.slots[1].entrant === null ||
+          node.slots[1].entrant.participants[0].prefix === null
             ? ""
             : node.slots[1].entrant.participants[0].prefix;
 
         const xID2P =
           node.slots[1].entrant === null ||
-          node.slots[1].entrant.participants[0].user === null
+          node.slots[1].entrant.participants[0].user === null ||
+          node.slots[1].entrant.participants[0].user.authorizations === null
             ? ""
             : `@${node.slots[1].entrant.participants[0].user.authorizations[0].externalUsername}`;
+
+        // ダブルスの場合は3Pと4Pも追加
+
+        const name3P =
+          node.slots[0].entrant === null ||
+          node.slots[0].entrant.participants[1] === undefined
+            ? ""
+            : node.slots[0].entrant.participants[1].gamerTag === null
+            ? ""
+            : node.slots[0].entrant.participants[1].gamerTag;
+
+        const team3P =
+          node.slots[0].entrant === null ||
+          node.slots[0].entrant.participants[1] === undefined
+            ? ""
+            : node.slots[0].entrant.participants[1].prefix === null
+            ? ""
+            : node.slots[0].entrant.participants[1].prefix;
+
+        const xID3P =
+          node.slots[0].entrant === null ||
+          node.slots[0].entrant.participants[1] === undefined
+            ? ""
+            : node.slots[0].entrant.participants[1].user === null ||
+              node.slots[0].entrant.participants[1].user.authorizations === null
+            ? ""
+            : `@${node.slots[0].entrant.participants[1].user.authorizations[0].externalUsername}`;
+
+        const name4P =
+          node.slots[1].entrant === null ||
+          node.slots[1].entrant.participants[1] === undefined
+            ? ""
+            : node.slots[1].entrant.participants[1].gamerTag === null
+            ? ""
+            : node.slots[1].entrant.participants[1].gamerTag;
+
+        const team4P =
+          node.slots[1].entrant === null ||
+          node.slots[1].entrant.participants[1] === undefined
+            ? ""
+            : node.slots[1].entrant.participants[1].prefix === null
+            ? ""
+            : node.slots[1].entrant.participants[1].prefix;
+
+        const xID4P =
+          node.slots[1].entrant === null ||
+          node.slots[1].entrant.participants[1] === undefined
+            ? ""
+            : node.slots[1].entrant.participants[1].user === null ||
+              node.slots[1].entrant.participants[1].user.authorizations === null
+            ? ""
+            : `@${node.slots[1].entrant.participants[1].user.authorizations[0].externalUsername}`;
 
         const stream = node.stream === null ? "" : node.stream.streamName;
         const round = node.fullRoundText;
@@ -109,6 +169,16 @@ export function useGetMatch() {
             name: name2P,
             team: team2P,
             xID: xID2P,
+          },
+          Player3: {
+            name: name3P,
+            team: team3P,
+            xID: xID3P,
+          },
+          Player4: {
+            name: name4P,
+            team: team4P,
+            xID: xID4P,
           },
           Round: round,
           State: state === 2 ? "In Progress" : "Waiting",

@@ -12,6 +12,8 @@ type phaseGroupAPIResponse = {
 
 type phaseGroupNodesAPIResponse = {
   fullRoundText: string;
+  wPlacement: number;
+  lPlacement: number;
   id: number;
   slots: Array<{
     entrant: {
@@ -65,6 +67,8 @@ type matchNodesAPIResponse = {
 type matchArray = {
   Player1: matchPlayerInfo;
   Player2: matchPlayerInfo;
+  Player3: matchPlayerInfo;
+  Player4: matchPlayerInfo;
   Round: string;
   State: "In Progress" | "Waiting";
   Stream: string;

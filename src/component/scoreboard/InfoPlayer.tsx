@@ -15,21 +15,25 @@ export function InfoPlayer() {
         name: infoScoreborad.Player2.name,
         team: infoScoreborad.Player2.team,
         xID: infoScoreborad.Player2.xID,
+        port: infoScoreborad.Player2.port,
       },
       Player2: {
         name: infoScoreborad.Player1.name,
         team: infoScoreborad.Player1.team,
         xID: infoScoreborad.Player1.xID,
+        port: infoScoreborad.Player1.port,
       },
       Player3: {
         name: infoScoreborad.Player4.name,
         team: infoScoreborad.Player4.team,
         xID: infoScoreborad.Player4.xID,
+        port: infoScoreborad.Player4.port,
       },
       Player4: {
         name: infoScoreborad.Player3.name,
         team: infoScoreborad.Player3.team,
         xID: infoScoreborad.Player3.xID,
+        port: infoScoreborad.Player3.port,
       },
     }));
   };

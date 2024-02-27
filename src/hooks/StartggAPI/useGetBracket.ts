@@ -22,9 +22,11 @@ export function useGetBracket() {
       phaseGroup(id: $phaseGroupId) {
         id
         bracketType
-        sets(page: 1, perPage: 19, sortType: NONE)  {
+        sets(perPage: 50)  {
           nodes {
             id
+            wPlacement
+            lPlacement
             fullRoundText
             slots {
               standing {
@@ -44,20 +46,15 @@ export function useGetBracket() {
       }
     }`;
 
-  const grandFinalBracket = ["GF", "GF2"];
-  const winnersBracket = ["WF", "WSFb", "WSFa", "WQFd", "WQFc", "WQFb", "WQFa"];
-  const losersBracket = [
-    "LF",
-    "LSF",
-    "LQFb",
-    "LQFa",
-    "LTOP8b",
-    "LTOP8a",
-    "LTOP16d",
-    "LTOP16c",
-    "LTOP16b",
-    "LTOP16a",
-  ];
+  // const GFBracket = ["GF", "GF2"];
+  // const WFBracket = ["WF"];
+  // const WSFBracket = ["WSFb", "WSFa"];
+  // const WQFBracket = ["WQFd", "WQFc", "WQFb", "WQFa"];
+  // const LFBracket = ["LF"];
+  // const LSFBracket = ["LSF"];
+  // const LQFBracket = ["LQFb", "LQFa"];
+  // const LTOP8Bracket = ["LTOP8b", "LTOP8a"];
+  // const LTOP16Bracket = ["LTOP16d", "LTOP16c", "LTOP16b", "LTOP16a"];
 
   const handleGetSets = async () => {
     // ボタンのローディング開始
@@ -75,23 +72,102 @@ export function useGetBracket() {
       // APIの結果を格納する配列
       const GF: Array<phaseGroupNodesAPIResponse> = [];
       const WF: Array<phaseGroupNodesAPIResponse> = [];
+      const WSF: Array<phaseGroupNodesAPIResponse> = [];
+      const WQF: Array<phaseGroupNodesAPIResponse> = [];
       const LF: Array<phaseGroupNodesAPIResponse> = [];
+      const LSF: Array<phaseGroupNodesAPIResponse> = [];
+      const LQF: Array<phaseGroupNodesAPIResponse> = [];
+      const LTOP8: Array<phaseGroupNodesAPIResponse> = [];
+      const LTOP16: Array<phaseGroupNodesAPIResponse> = [];
 
       nodes.map((node) => {
         const round = node.fullRoundText;
+        const wPlacement = node.wPlacement;
+        const lPlacement = node.lPlacement;
         if (bracketType === "DOUBLE_ELIMINATION") {
-          if (round.includes("Grand")) {
+          if (
+            //GF
+            round.includes("Grand") &&
+            wPlacement === 1 &&
+            lPlacement === 2
+          ) {
             GF.push(node);
-          } else if (round.includes("Winners")) {
+          } else if (
+            // WF
+            round.includes("Winners") &&
+            wPlacement === 2 &&
+            lPlacement === 3
+          ) {
             WF.push(node);
-          } else if (round.includes("Losers")) {
+          } else if (
+            // WS
+            wPlacement === 3 &&
+            lPlacement === 5
+          ) {
+            WSF.push(node);
+          } else if (
+            // WQF
+            wPlacement === 5 &&
+            lPlacement === 9
+          ) {
+            WQF.push(node);
+          } else if (
+            // LF
+            round.includes("Losers") &&
+            wPlacement === 2 &&
+            lPlacement === 3
+          ) {
             LF.push(node);
+          } else if (
+            // LSF
+            wPlacement === 3 &&
+            lPlacement === 4
+          ) {
+            LSF.push(node);
+          } else if (
+            // LQF
+            wPlacement === 4 &&
+            lPlacement === 5
+          ) {
+            LQF.push(node);
+          } else if (
+            // LTOP8
+            wPlacement === 5 &&
+            lPlacement === 7
+          ) {
+            LTOP8.push(node);
+          } else if (
+            // LTOP16
+            wPlacement === 7 &&
+            lPlacement === 9
+          ) {
+            LTOP16.push(node);
           }
         } else if (bracketType === "SINGLE_ELIMINATION") {
-          if (round.includes("3rd Place Tiebreak")) {
+          if (
+            // 3rd Price
+            wPlacement === 3 &&
+            lPlacement === 4
+          ) {
             GF.push(node);
-          } else if (round.includes("Final")) {
+          } else if (
+            // Final
+            wPlacement === 1 &&
+            lPlacement === 2
+          ) {
             WF.push(node);
+          } else if (
+            // Semi Final
+            wPlacement === 2 &&
+            lPlacement === 3
+          ) {
+            WSF.push(node);
+          } else if (
+            // Quarter Final
+            wPlacement === 3 &&
+            lPlacement === 5
+          ) {
+            WQF.push(node);
           }
         }
       });
@@ -100,11 +176,8 @@ export function useGetBracket() {
         round: string[],
         array: Array<phaseGroupNodesAPIResponse>
       ) => {
-        if (array === GF) {
-          array.sort((a, b) => a.id - b.id); //GFはResetがあるかないか不明瞭なので、GF2よりGFを配列[0]にする
-        } else {
-          array.sort((a, b) => b.id - a.id);
-        }
+        console.log(array);
+        array.sort((a, b) => a.id - b.id); //ID順にソート
 
         round.map((x, i) => {
           if (array[i] === undefined) {
@@ -136,9 +209,23 @@ export function useGetBracket() {
         });
       };
 
-      applyBracket(grandFinalBracket, GF);
-      applyBracket(winnersBracket, WF);
-      applyBracket(losersBracket, LF);
+      const BracketName = [
+        ["GF", "GF2"],
+        ["WF"],
+        ["WSFa", "WSFb"],
+        ["WQFa", "WQFb", "WQFc", "WQFd"],
+        ["LF"],
+        ["LSF"],
+        ["LQFa", "LQFb"],
+        ["LTOP8a", "LTOP8b"],
+        ["LTOP16a", "LTOP16b", "LTOP16c", "LTOP16d"],
+      ];
+
+      const APIResponseArrays = [GF, WF, WSF, WQF, LF, LSF, LQF, LTOP8, LTOP16];
+
+      BracketName.map((barcket, i) => {
+        applyBracket(barcket, APIResponseArrays[i]);
+      });
 
       setCompletedAlert(true);
     } catch (error) {
